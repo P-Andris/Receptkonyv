@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+    <title>Kezdőlap</title>
+</head>
+<body>
+    <main class="mx-auto text-center" style="max-width: 65%;">
+        <header><h3>Receptek</h3></header>
+        <aside>
+            <form method="GET">
+                {% for filter in receptFilter.form %}
+                    {{ filter.label }}
+                    {{ filter }}
+                {% endfor %}
+                <input class="btn btn-secondary mt-3 mb-3" type="submit" value="Keresés">
+            </form>
+            <a class="btn btn-primary" href="{% url 'uj-recept' %}">Új recept</a>
+        </aside>
+        <article>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <td>Név</td>
+                        <td>Kategória</td>
+                        <td></td>
+                        <td></td>
+                    </thead>
+                    {% for recept in receptFilter.qs %}
+                        <tr>
+                            <td>{{ recept.nev }}</td>
+                            <td>{{ recept.kat_id }}</td>
+                            <td><a href="{% url 'index-frissites' recept.id %}">Bővebben</a></td>
+                            <td><a class="btn btn-danger" href="{% url 'recept-torlese' recept.id %}">Törlés</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% if recept %}
+                <div class="w-50 mx-auto">
+                    <ul class="list-group list-group-horizontal-md">
+                        <li class="list-group-item">{{ recept.nev }} | {{ recept.kat_id }}</li>
+                        <li class="list-group-item">{{ recept.leiras }}</li>
+                        <li class="list-group-item">
+                            <img src="{{ recept.kep_eleresi_ut }}" alt="Kép" style="max-width: 100px; max-height: 100px;">
+                        </li>
+                        <li class="list-group-item">{{ recept.hirdetes_datuma }}</li>
+                    </ul>
+                </div>
+            {% endif %}
+        </article>
+        <footer></footer>
+    </main>
+</body>
+</html>
